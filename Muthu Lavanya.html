@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Muthu Lavanya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0B4F4A;--gold:#F4B63A;--pink:#F6A3BC;--ink:#10231F;--paper:#FBF8F3;
+--ease:cubic-bezier(.77,0,.18,1);--out:cubic-bezier(.16,1,.3,1)}
+:root:not([data-theme="light"]){color-scheme:light}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--ink);font-family:'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);-webkit-tap-highlight-color:transparent}
+button,a{font:inherit;color:inherit}
+:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+#stage{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 56px) 24px calc(env(safe-area-inset-bottom,0px) + 84px);
+clip-path:inset(0 0 0 100%);transition:clip-path .75s var(--ease);display:flex;flex-direction:column;justify-content:center;gap:20px}
+.slide.shown{clip-path:inset(0)}
+.slide>*{max-width:34rem}
+.teal{background:var(--teal);color:var(--gold)}
+.gold{background:var(--gold);color:var(--teal)}
+.pink{background:var(--pink);color:var(--ink)}
+h1{font-weight:800;font-size:clamp(3.6rem,20vw,9.5rem);line-height:.84;letter-spacing:-.05em}
+h1 span{display:block}h1 span+span{margin-left:.35em}
+h2{font-weight:800;font-size:clamp(2.4rem,11vw,5rem);line-height:.92;letter-spacing:-.04em}
+p{font-size:1.1rem;line-height:1.5;font-weight:400}
+.big{font-size:clamp(1.25rem,5vw,1.7rem);line-height:1.3;font-weight:600;letter-spacing:-.01em}
+.on h1 span,.on h2{animation:up .8s var(--out) both}
+.on h1 span+span{animation-delay:.12s}
+.on h2{animation-delay:.25s}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+/* progress */
+#bar{position:fixed;z-index:20;left:16px;right:16px;top:calc(env(safe-area-inset-top,0px) + 12px);display:flex;gap:4px;pointer-events:none}
+#bar i{flex:1;height:4px;border-radius:2px;background:currentColor;opacity:.28;transition:opacity .4s}
+#bar i.full{opacity:1}
+#bar{color:var(--paper);mix-blend-mode:difference}
+#nav{position:fixed;z-index:20;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:12px 18px calc(env(safe-area-inset-bottom,0px) + 14px);pointer-events:none;mix-blend-mode:difference;color:var(--paper)}
+#nav button{pointer-events:auto;background:none;border:0;padding:10px 6px;font-weight:600;font-size:1rem;cursor:pointer}
+#nav button:disabled{opacity:.3;cursor:default}
+/* monogram */
+.mono{position:relative;width:84px;height:84px;margin-bottom:6px;border:0;background:none;cursor:pointer;padding:0}
+.mono svg{width:100%;height:100%;overflow:visible}
+.mono:active{transform:rotate(-6deg)}
+.on .mono circle.dot{animation:pop .7s .9s var(--out) both}
+@keyframes pop{from{transform:scale(0)}}
+.mono circle.dot{transform-origin:62px 62px}
+/* buttons */
+.row{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.btn{border:2.5px solid currentColor;border-radius:999px;padding:12px 22px;font-weight:800;background:none;cursor:pointer;text-decoration:none;display:inline-block;transition:background .3s,color .3s}
+.btn.fill{background:var(--gold);color:var(--teal);border-color:var(--gold)}
+.btn:hover{background:var(--paper);color:var(--teal);border-color:var(--paper)}
+.now{font-weight:600;font-size:1rem}
+.now b{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;background:var(--pink);margin-right:.5rem;animation:blink 1.6s steps(2) infinite}
+@keyframes blink{50%{opacity:.2}}
+/* skills */
+.lv{display:grid;gap:2px}
+.lv h3{font-size:1rem;font-weight:600;opacity:.75}
+.lv p{font-weight:800;letter-spacing:-.03em;line-height:1}
+.lv .a{font-size:clamp(2.4rem,11vw,4.4rem)}
+.lv .b{font-size:clamp(1.8rem,8vw,3rem)}
+.lv .c{font-size:clamp(1.3rem,5.5vw,2rem)}
+.lv+.lv{margin-top:14px}
+/* journey */
+.stack{display:grid;gap:0}
+.stack div{padding:14px 0;border-top:2.5px solid currentColor}
+.stack h3{font-size:1.5rem;font-weight:800;letter-spacing:-.03em}
+.stack p{font-size:1rem;margin-top:2px}
+/* top list */
+.top{list-style:none;padding:0;display:grid;gap:6px}
+.top li{display:flex;gap:16px;align-items:baseline;font-size:clamp(1.8rem,8vw,3rem);font-weight:800;letter-spacing:-.03em;line-height:1.05}
+.top li span{font-size:1rem;font-weight:600;min-width:1.4rem}
+/* opening */
+#open{position:fixed;inset:0;z-index:100;background:var(--teal);color:var(--gold);display:flex;align-items:center;padding:24px;transition:clip-path .6s var(--ease);clip-path:inset(0)}
+#open.out{clip-path:inset(0 0 100% 0)}
+#open h1{font-size:clamp(3.2rem,17vw,8rem)}
+#open .w{display:block;overflow:hidden;padding-bottom:.08em}
+#open .w+.w{margin-left:.35em}
+#open .l{display:inline-block;transform:translateY(105%);animation:rise .7s var(--out) forwards;animation-delay:calc(var(--i)*55ms + 150ms)}
+@keyframes rise{to{transform:none}}
+#skip{position:absolute;right:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);background:none;border:2px solid currentColor;border-radius:999px;padding:8px 18px;font-weight:600;cursor:pointer}
+@media (min-width:760px){.slide{padding-left:12vw;padding-right:12vw}#bar{left:12vw;right:12vw}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}#open{display:none}}
+</style>
+</head>
+<body>
+
+<div id="open" aria-label="Muthu Lavanya">
+  <h1 aria-hidden="true" id="oname"></h1>
+  <button id="skip">Skip</button>
+</div>
+
+<div id="bar" aria-hidden="true"></div>
+
+<main id="stage">
+
+<section class="slide teal" aria-label="Hello">
+  <button class="mono" id="mono" aria-label="Monogram ML">
+    <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#F6A3BC"/><circle class="dot" cx="50" cy="50" r="46" fill="#F4B63A" transform="translate(12 12) scale(.74)"/>
+    <text x="62" y="75" text-anchor="middle" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="40" letter-spacing="-3" fill="#0B4F4A">ML</text></svg>
+  </button>
+  <h1><span>Muthu</span><span>Lavanya</span></h1>
+  <p class="big">First-year IT student. Learning to build things that people can actually use.</p>
+  <p class="now"><b></b>Currently getting through semester one and building this site.</p>
+  <div class="row">
+    <button class="btn fill" data-act="next">Explore</button>
+    <button class="btn" data-act="contact">Say hi</button>
+  </div>
+</section>
+
+<section class="slide gold" aria-label="About">
+  <h2>So, who is this?</h2>
+  <p class="big">I'm Lavanya, a first-year B.Tech IT student, and I'm at the stage where a small program finally running feels like a big win.</p>
+  <p>I chose IT because I like the moment something I typed turns into something I can click. I'm still finding out which part of it is mine, and I'd rather say so than pretend otherwise.</p>
+  <p>[Replace this paragraph with your own story: what pulled you to IT, and who you are when the laptop is closed.]</p>
+</section>
+
+<section class="slide pink" aria-label="Skills">
+  <h2>What I can do, honestly</h2>
+  <div class="lv"><h3>Comfortable</h3><p class="a">HTML, CSS</p></div>
+  <div class="lv"><h3>Learning right now</h3><p class="b">JavaScript, Python, Git</p></div>
+  <div class="lv"><h3>Curious about</h3><p class="c">Databases, design, how the web works</p></div>
+</section>
+
+<section class="slide teal" aria-label="Journey">
+  <h2>The story so far</h2>
+  <div class="stack">
+    <div><h3>Made</h3><p>This portfolio, built from scratch. [Add a class project or a small app here.]</p></div>
+    <div><h3>Learning</h3><p>Programming fundamentals and how websites are put together.</p></div>
+    <div><h3>Want to build</h3><p>[The project you'd start tomorrow if you had the skills.]</p></div>
+  </div>
+</section>
+
+<section class="slide pink" aria-label="Beyond code">
+  <h2>My top three, off the clock</h2>
+  <ol class="top">
+    <li><span>1</span>[A hobby]</li>
+    <li><span>2</span>[Another one]</li>
+    <li><span>3</span>[A fun fact]</li>
+  </ol>
+  <p>Tap the ML on the first slide a few times. I left something there.</p>
+</section>
+
+<section class="slide gold" aria-label="Contact">
+  <h2>Say hi</h2>
+  <p class="big">Email is fastest. I read everything.</p>
+  <div class="row">
+    <a class="btn" href="mailto:your.email@example.com">Email</a>
+    <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="btn" href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</section>
+
+<section class="slide teal" id="egg" hidden aria-label="Bonus">
+  <h2>You found it.</h2>
+  <p class="big">My top fact of the year: [a funny thing that happened while learning to code].</p>
+  <div class="row"><button class="btn fill" data-act="first">Replay from the start</button></div>
+</section>
+
+</main>
+
+<div id="nav"><button id="prev">Back</button><button id="next">Next</button></div>
+
+<script>
+(function(){
+var stage=document.getElementById('stage'),bar=document.getElementById('bar'),
+    prev=document.getElementById('prev'),next=document.getElementById('next'),
+    slides=[],idx=0;
+
+function build(){
+  slides=[].slice.call(stage.querySelectorAll('.slide:not([hidden])'));
+  bar.innerHTML=slides.map(function(){return '<i></i>'}).join('');
+  slides.forEach(function(s,i){s.style.zIndex=i+1});
+}
+function go(n){
+  idx=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach(function(s,i){
+    s.classList.toggle('shown',i<=idx);
+    s.classList.toggle('on',i===idx);
+    s.setAttribute('aria-hidden',i!==idx);
+    if('inert' in s) s.inert=i!==idx;
+    bar.children[i].classList.toggle('full',i<=idx);
+  });
+  prev.disabled=idx===0;
+  next.disabled=idx===slides.length-1;
+  slides[idx].scrollTop=0;
+}
+build();go(0);
+
+next.onclick=function(){go(idx+1)};
+prev.onclick=function(){go(idx-1)};
+stage.addEventListener('click',function(e){
+  if(e.target.closest('a,button,#nav'))return;
+  var x=e.clientX/window.innerWidth;
+  go(x<.3?idx-1:idx+1);
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight')go(idx+1);
+  if(e.key==='ArrowLeft')go(idx-1);
+});
+stage.addEventListener('click',function(e){
+  var a=e.target.closest('[data-act]');if(!a)return;
+  var t=a.dataset.act;
+  if(t==='next')go(idx+1);
+  if(t==='contact')go(slides.length-(document.getElementById('egg').hidden?1:2));
+  if(t==='first')go(0);
+});
+
+/* easter egg: five taps on the monogram */
+var taps=0,timer;
+document.getElementById('mono').addEventListener('click',function(){
+  taps++;clearTimeout(timer);timer=setTimeout(function(){taps=0},1500);
+  if(taps>=5){
+    var egg=document.getElementById('egg');
+    if(egg.hidden){egg.hidden=false;build();go(0)}
+    go(slides.length-1);taps=0;
+  }
+});
+
+/* opening */
+var o=document.getElementById('open'),on=document.getElementById('oname'),n=0;
+'Muthu Lavanya'.split(' ').forEach(function(w){
+  var s=document.createElement('span');s.className='w';
+  w.split('').forEach(function(c){
+    var l=document.createElement('span');l.className='l';l.textContent=c;l.style.setProperty('--i',n++);s.appendChild(l);
+  });
+  on.appendChild(s);
+});
+function close(){o.classList.add('out');setTimeout(function(){o.style.display='none'},650)}
+var t=setTimeout(close,1700);
+document.getElementById('skip').onclick=function(){clearTimeout(t);close()};
+})();
+</script>
+</body>
+</html>
